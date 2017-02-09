@@ -19,6 +19,7 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
+import static ru.unlocker.soap.service.CountryEndpoint.NAMESPACE_URI;
 
 /**
  *
@@ -27,7 +28,7 @@ import org.springframework.xml.xsd.XsdSchema;
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
-
+    
     @Bean
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext appCtx) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -35,29 +36,38 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         servlet.setTransformWsdlLocations(true);
         return new ServletRegistrationBean(servlet, "/ws/*");
     }
-
+    
     @Bean
     public WebServiceMessageFactory messageFactory() {
         SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
         messageFactory.setSoapVersion(SoapVersion.SOAP_12);
         return messageFactory;
     }
-
+    
     @Bean(name = "countries")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema countriesSchema) {
         DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+        definition.setCreateSoap11Binding(false);
+        definition.setCreateSoap12Binding(true);
         definition.setPortTypeName("CountriesPort");
         definition.setLocationUri("/ws");
         definition.setTargetNamespace("http://spring.io/guides/gs-producing-web-service");
         definition.setSchema(countriesSchema);
+
+        // fix for adding soapAction to the dynamic WSDL
+        Properties soapActions = new Properties();
+        soapActions.setProperty("makeAuth", NAMESPACE_URI + "/makeAuthRequest");
+        soapActions.setProperty("makeUnAuth", NAMESPACE_URI + "/makeUnAuthRequest");
+        soapActions.setProperty("getCountry", NAMESPACE_URI + "/getCountryRequest");
+        definition.setSoapActions(soapActions);
         return definition;
     }
-
+    
     @Bean
     public XsdSchema countriesSchema() {
         return new SimpleXsdSchema(new ClassPathResource("countries.xsd"));
     }
-
+    
     @Bean
     public SimplePasswordValidationCallbackHandler securityCallbackHandler() {
         SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
@@ -66,7 +76,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         callbackHandler.setUsers(users);
         return callbackHandler;
     }
-
+    
     @Bean
     public Wss4jSecurityInterceptor securityInterceptor() {
         Wss4jSecurityInterceptor securityInterceptor = new Wss4jSecurityInterceptor();
@@ -74,10 +84,10 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         securityInterceptor.setValidationCallbackHandler(securityCallbackHandler());
         return securityInterceptor;
     }
-
+    
     @Override
     public void addInterceptors(List<EndpointInterceptor> interceptors) {
-        interceptors.add(securityInterceptor());
+//        interceptors.add(securityInterceptor());
     }
-
+    
 }

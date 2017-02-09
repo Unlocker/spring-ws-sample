@@ -33,6 +33,18 @@
         </xs:complexType>
     </xs:element>
     
+    <xs:element name="makeUnAuthRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="makeUnAuthResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="authResult" type="tns:authResult"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:complexType name="credentials">
         <xs:sequence>
             <xs:element name="username" type="xs:string"/>
