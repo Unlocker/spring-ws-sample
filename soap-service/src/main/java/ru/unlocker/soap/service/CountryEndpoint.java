@@ -52,14 +52,22 @@ public class CountryEndpoint {
     @ResponsePayload
     public MakeAuthResponse makeAuth(@RequestPayload MakeAuthRequest request) {
         HttpServletRequest httpReq = httpRequest();
-
-        HttpSession session = httpReq.getSession();
-        //setting session to expiry in 30 mins
-        session.setMaxInactiveInterval(30 * 60);
-        LOG.info("Accepted SESSION {}", session);
-
         final MakeAuthResponse response = new MakeAuthResponse();
-        response.setAuthResult(AuthResult.SUCCESS);
+        final boolean isVerified = Optional.ofNullable(request.getAuth())
+            .map(x -> x.getPassword())
+            .map(x -> x.length() % 2 == 0)
+            .orElse(false);
+
+        if (isVerified) {
+            response.setAuthResult(AuthResult.SUCCESS);
+            HttpSession session = httpReq.getSession();
+            //setting session to expiry in 30 mins
+            session.setMaxInactiveInterval(30 * 60);
+            LOG.info("Accepted SESSION {}", session);
+        } else {
+            response.setAuthResult(AuthResult.FAIL);
+            LOG.info("Rejected SESSION");
+        }
         return response;
     }
 
