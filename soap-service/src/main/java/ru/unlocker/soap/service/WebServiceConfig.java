@@ -28,7 +28,7 @@ import static ru.unlocker.soap.service.CountryEndpoint.NAMESPACE_URI;
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
-    
+
     @Bean
     public ServletRegistrationBean messageDispatcherServlet(ApplicationContext appCtx) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -36,14 +36,14 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         servlet.setTransformWsdlLocations(true);
         return new ServletRegistrationBean(servlet, "/ws/*");
     }
-    
+
     @Bean
     public WebServiceMessageFactory messageFactory() {
         SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
         messageFactory.setSoapVersion(SoapVersion.SOAP_12);
         return messageFactory;
     }
-    
+
     @Bean(name = "countries")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema countriesSchema) {
         DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
@@ -62,12 +62,12 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         definition.setSoapActions(soapActions);
         return definition;
     }
-    
+
     @Bean
     public XsdSchema countriesSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("countries.xsd"));
+        return new SimpleXsdSchema(new ClassPathResource("xjc/countries.xsd"));
     }
-    
+
     @Bean
     public SimplePasswordValidationCallbackHandler securityCallbackHandler() {
         SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
@@ -76,7 +76,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         callbackHandler.setUsers(users);
         return callbackHandler;
     }
-    
+
     @Bean
     public Wss4jSecurityInterceptor securityInterceptor() {
         Wss4jSecurityInterceptor securityInterceptor = new Wss4jSecurityInterceptor();
@@ -84,10 +84,10 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         securityInterceptor.setValidationCallbackHandler(securityCallbackHandler());
         return securityInterceptor;
     }
-    
+
     @Override
     public void addInterceptors(List<EndpointInterceptor> interceptors) {
 //        interceptors.add(securityInterceptor());
     }
-    
+
 }

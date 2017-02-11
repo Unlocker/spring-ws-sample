@@ -19,6 +19,10 @@
             <artifactId>spring-boot-starter-ws</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
         </dependency>
@@ -70,7 +74,7 @@
                 <configuration>
                     <clearOutputDir>false</clearOutputDir>
                     <outputDirectory>${project.build.directory}/generated-sources/xjc</outputDirectory>
-                    <sources>${basedir}/src/main/resources/</sources>
+                    <sources>${basedir}/src/main/resources/xjc</sources>
                 </configuration>
             </plugin>
         </plugins>
