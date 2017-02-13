@@ -9,6 +9,26 @@
     <artifactId>soap-service</artifactId>
     <packaging>jar</packaging>
     
+    <properties>
+        <docker.image.prefix>unlocker</docker.image.prefix>
+        <docker.resource.targetPath>/</docker.resource.targetPath>
+    </properties>
+    
+    <!-- define a profile that is activated in windows environments -->
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <docker.resource.targetPath></docker.resource.targetPath>
+            </properties>
+        </profile>
+    </profiles>
+    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,6 +72,7 @@
                     </execution>
                 </executions>
             </plugin>
+            
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -59,6 +80,7 @@
                     <mainClass>ru.unlocker.soap.service.Application</mainClass>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
@@ -72,9 +94,25 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <extension>true</extension>
                     <clearOutputDir>false</clearOutputDir>
                     <outputDirectory>${project.build.directory}/generated-sources/xjc</outputDirectory>
                     <sources>${basedir}/src/main/resources/xjc</sources>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.19.0</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${docker.image.prefix}/${project.artifactId}</name>
+                            <build>
+                            </build>
+                        </image>
+                    </images>
                 </configuration>
             </plugin>
         </plugins>
