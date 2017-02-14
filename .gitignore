@@ -1,3 +1,4 @@
 /soap-client/target/
 /soap-service/target/
 /soap-service/nb-configuration.xml
+/nb-configuration.xml
