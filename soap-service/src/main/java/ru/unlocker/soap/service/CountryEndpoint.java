@@ -40,6 +40,10 @@ public class CountryEndpoint {
         return httpReq;
     }
 
+    private static String sessionId(HttpSession session) {
+        return Optional.ofNullable(session).map(HttpSession::getId).orElse(null);
+    }
+
     private final CountryRepository countryRepository;
 
     @Autowired
@@ -63,10 +67,10 @@ public class CountryEndpoint {
             HttpSession session = httpReq.getSession();
             //setting session to expiry in 30 mins
             session.setMaxInactiveInterval(30 * 60);
-            LOG.info("Accepted SESSION {}", session);
+            LOG.info("makeAuth: Accepted SESSION {}", sessionId(session));
         } else {
             response.setAuthResult(AuthResult.FAIL);
-            LOG.info("Rejected SESSION");
+            LOG.info("makeAuth: Rejected SESSION");
         }
         return response;
     }
@@ -78,7 +82,7 @@ public class CountryEndpoint {
         HttpServletRequest httpReq = httpRequest();
 
         HttpSession session = httpReq.getSession(false);
-        LOG.info("Received SESSION {}", session);
+        LOG.info("getCountry: Received SESSION {}", sessionId(session));
         if (session == null) {
             throw new InvalidSessionException("Invalid user session");
         }
@@ -95,7 +99,7 @@ public class CountryEndpoint {
         HttpServletRequest httpReq = httpRequest();
 
         HttpSession session = httpReq.getSession(false);
-        LOG.info("Received SESSION {}", session);
+        LOG.info("makeUnAuth: Received SESSION {}", sessionId(session));
         Optional.ofNullable(session).ifPresent(HttpSession::invalidate);
 
         final MakeUnAuthResponse response = new MakeUnAuthResponse();
