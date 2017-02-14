@@ -9,8 +9,12 @@ import org.apache.camel.impl.DefaultEndpoint;
  *
  * @author maksimovsa
  */
+//@Component
 public class WsEndpoint extends DefaultEndpoint {
-    
+
+//    @Autowired
+//    private WsClient wsClient;
+
     @Override
     public Producer createProducer() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -25,5 +29,5 @@ public class WsEndpoint extends DefaultEndpoint {
     public Consumer createConsumer(Processor processor) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

@@ -1,7 +1,7 @@
 package ru.unlocker.soap.client;
 
-import org.apache.camel.CamelContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManagerFactory;
+import org.apache.camel.component.jpa.JpaComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -21,16 +21,13 @@ public class ApplicationConfiguration {
 
     private final static String CONTEXT_PATH = "ru.unlocker.soap.client";
 
-    @Autowired
-    CamelContext camelContext;
-
     /**
      * Initiates news fetcher.
      */
-    @Bean
-    public WsClient newsClient(Jaxb2Marshaller marshaller, WebServiceMessageFactory factory) {
+    @Bean(name = "wsClient", initMethod = "login", destroyMethod = "logout")
+    public WsClient wsClient(Jaxb2Marshaller marshaller, WebServiceMessageFactory factory) {
         WsClient client = new WsClient(factory);
-        client.setDefaultUri("http://127.0.0.1:8080");
+        client.setDefaultUri("http://127.0.0.1:8080/ws/");
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
         client.setInterceptors(new ClientInterceptor[]{
@@ -58,5 +55,12 @@ public class ApplicationConfiguration {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         marshaller.setContextPath(CONTEXT_PATH);
         return marshaller;
+    }
+
+    @Bean(name = "jpa")
+    public JpaComponent jpaComponent(EntityManagerFactory emf) {
+        JpaComponent component = new JpaComponent();
+        component.setEntityManagerFactory(emf);
+        return component;
     }
 }
