@@ -24,6 +24,7 @@
                 </os>
             </activation>
             <properties>
+                <docker.host>tcp://192.168.99.100:2376</docker.host>
                 <docker.resource.targetPath></docker.resource.targetPath>
             </properties>
         </profile>
@@ -46,7 +47,7 @@
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
         </dependency>
-     </dependencies>
+    </dependencies>
     
     <build>
         <plugins>
