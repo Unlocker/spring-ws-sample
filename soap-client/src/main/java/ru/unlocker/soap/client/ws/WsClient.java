@@ -37,9 +37,17 @@ public class WsClient extends WebServiceGatewaySupport implements Supplier<Count
     private String username = "username";
     private String password = "password";
 
+    /**
+     * Creates web service gateway.
+     */
     public WsClient() {
     }
 
+    /**
+     * Creates web service gateway.
+     *
+     * @param messageFactory message factory
+     */
     public WsClient(WebServiceMessageFactory messageFactory) {
         super(messageFactory);
     }
@@ -60,6 +68,9 @@ public class WsClient extends WebServiceGatewaySupport implements Supplier<Count
         this.password = password;
     }
 
+    /**
+     * Makes login.
+     */
     protected void login() {
         MakeAuthRequest payload = FACTORY.createMakeAuthRequest();
         Credentials creds = FACTORY.createCredentials();
@@ -80,7 +91,13 @@ public class WsClient extends WebServiceGatewaySupport implements Supplier<Count
             .map(c -> format("%s=%s", c.getName(), c.getValue())).collect(toList())));
     }
 
-    protected GetCountryResponse select(String country) {
+    /**
+     * Retrieves country info by name.
+     *
+     * @param country country name
+     * @return country info
+     */
+    public GetCountryResponse select(String country) {
         GetCountryRequest payload = FACTORY.createGetCountryRequest();
         payload.setName(country);
         GetCountryResponse response = (GetCountryResponse) getWebServiceTemplate().marshalSendAndReceive(payload,
@@ -88,6 +105,9 @@ public class WsClient extends WebServiceGatewaySupport implements Supplier<Count
         return response;
     }
 
+    /**
+     * Makes logout.
+     */
     protected void logout() {
         MakeUnAuthRequest payload = FACTORY.createMakeUnAuthRequest();
         try {

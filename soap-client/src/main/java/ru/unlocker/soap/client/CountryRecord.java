@@ -17,6 +17,8 @@ import javax.persistence.Table;
 @Table(name = "countries")
 public class CountryRecord implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -13,6 +13,7 @@ import ru.unlocker.soap.client.ws.AuthenticationClientInterceptor;
 import ru.unlocker.soap.client.ws.WsClient;
 
 /**
+ * Application configuration.
  *
  * @author maksimovsa
  */
@@ -23,6 +24,10 @@ public class ApplicationConfiguration {
 
     /**
      * Initiates news fetcher.
+     *
+     * @param marshaller marshaller
+     * @param factory message factory
+     * @return web service client
      */
     @Bean(name = "wsClient", initMethod = "login", destroyMethod = "logout")
     public WsClient wsClient(Jaxb2Marshaller marshaller, WebServiceMessageFactory factory) {
@@ -50,6 +55,11 @@ public class ApplicationConfiguration {
         return messageFactory;
     }
 
+    /**
+     * Marshaller.
+     *
+     * @return marshaller
+     */
     @Bean
     public Jaxb2Marshaller marshaller() {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
@@ -57,6 +67,12 @@ public class ApplicationConfiguration {
         return marshaller;
     }
 
+    /**
+     * JPA bean.
+     *
+     * @param emf entity manager factory
+     * @return Camel component
+     */
     @Bean(name = "jpa")
     public JpaComponent jpaComponent(EntityManagerFactory emf) {
         JpaComponent component = new JpaComponent();
