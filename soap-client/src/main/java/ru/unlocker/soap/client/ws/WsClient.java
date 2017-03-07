@@ -22,6 +22,7 @@ import ru.unlocker.soap.client.MakeUnAuthRequest;
 import ru.unlocker.soap.client.ObjectFactory;
 
 /**
+ * Web service gateway.
  *
  * @author maksimovsa
  */
@@ -77,8 +78,6 @@ public class WsClient extends WebServiceGatewaySupport implements Supplier<Count
         AuthenticationClientInterceptor authenticator = (AuthenticationClientInterceptor) getInterceptors()[0];
         authenticator.setSessionKeys(String.join(";", sessionKeys.stream().flatMap((header) -> parse(header).stream())
             .map(c -> format("%s=%s", c.getName(), c.getValue())).collect(toList())));
-
-//        return sessionKeys;
     }
 
     protected GetCountryResponse select(String country) {
