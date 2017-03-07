@@ -114,6 +114,32 @@
                         <image>
                             <name>${docker.image.prefix}/${project.artifactId}</name>
                             <build>
+                                <from>frolvlad/alpine-oraclejdk8:slim</from>
+                                <maintainer>john.doe@example.com</maintainer>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                                <volumes>
+                                    <volume>/tmp</volume>
+                                </volumes>
+                                <assembly>
+                                    <targetDir>/</targetDir>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <runCmds>
+                                    <run>
+                                        sh -c 'touch /${project.build.finalName}.${project.packaging}'
+                                    </run>
+                                </runCmds>
+                                <entryPoint>
+                                    <shell>
+                                        java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.${project.packaging}
+                                    </shell>
+                                </entryPoint>
                             </build>
                         </image>
                     </images>
